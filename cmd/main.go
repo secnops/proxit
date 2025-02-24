@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/secnops/proxit/handler"
 )
@@ -18,6 +19,10 @@ func main() {
 	localAddr := b.String()
 	flag.Parse()
 
+	server := &http.Server{
+		Addr:              localAddr,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
 	http.HandleFunc("/", handler.Proxy)
-	log.Fatal(http.ListenAndServe(localAddr, nil))
+	log.Fatal(server.ListenAndServe())
 }

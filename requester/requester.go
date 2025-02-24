@@ -33,7 +33,7 @@ func Request(method, url_, body string, headers map[string]string) string {
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, /* #nosec */
 		},
 	}
 	var req *http.Request

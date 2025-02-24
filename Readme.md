@@ -6,7 +6,7 @@ More features to come......maybe.
 
 
 ## Build
-It strips the binary and also compacts it with upx to make it as small ass possible.
+It strips the binary and also compacts it with upx to make it as small as possible.
 
 ``` ./builder.sh [executable name] ```
 

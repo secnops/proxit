@@ -16,7 +16,7 @@ func Proxy(w http.ResponseWriter, req *http.Request) {
 	pathToRequest := req.Header.Get("path")
 	port := req.Header.Get("port")
 	if /*pathToRequest == "" ||*/ port == "" {
-		io.WriteString(w, `
+		_, err := io.WriteString(w, `
 		The request should be something like:
 		GET /PATH HTTP/1.1
 		Host: host
@@ -24,6 +24,9 @@ func Proxy(w http.ResponseWriter, req *http.Request) {
 		Remote-address: [if you do not want to connect to a local service]
 		Tls:  [if the other service is running over Tls]
 		`)
+		if err != nil {
+			panic(err)
+		}
 		return
 	}
 	remoteAddr := req.Header.Get("remote-address")
@@ -40,6 +43,9 @@ func Proxy(w http.ResponseWriter, req *http.Request) {
 
 	slog.Info("Request info", "Method", req.Method, "Url", url)
 	i := r.Request(req.Method, url, "", map[string]string{})
-	io.WriteString(w, i)
+	_, err := io.WriteString(w, i)
+	if err != nil {
+		panic(err)
+	}
 	return
 }

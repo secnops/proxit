@@ -1,5 +1,6 @@
 # Proxit
 
+
 Very simple reverse proxy to talk with HTTP services on a target (local or remote).
 
 More features to come......maybe.
@@ -25,3 +26,6 @@ Tls: [If the other service is running over Tls, no specific value needed, just a
 
 
 ```
+
+## Warning
+This is for educational purposes only, the writer of this tool is not responsible for any malicious use of it.

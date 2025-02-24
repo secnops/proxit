@@ -14,7 +14,7 @@ It strips the binary and also compacts it with upx to make it as small as possib
 ## Usage
 On target, launch it wit ./proxit -exposePort 8000
 
-make an HTTP request to the service with the following headers
+Make an HTTP request to the service with the following headers
 
 ```
 GET / HTTP/1.1
@@ -25,6 +25,14 @@ Remote-address: [ Pass a remote address to access it through the target]
 Tls: [If the other service is running over Tls, no specific value needed, just add some value]
 
 
+```
+
+Using curl
+
+```
+curl --path-as-is -i -s -k -X $'GET' \
+    -H $'Host: host:8000' -H $'Path: /' -H $'Port: 10000' -H $'Remote-address: 10.10.10.10' -H $'Tls: yuup' \
+    $'http://target/'
 ```
 
 ## Warning

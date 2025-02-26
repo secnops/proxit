@@ -14,7 +14,7 @@ func Proxy(w http.ResponseWriter, req *http.Request) {
 	// if the requests sends a remote-address we will point the proxied request to there
 	// else 127.0.0.1 it is
 	pathToRequest := req.Header.Get("path")
-	port := req.Header.Get("port")
+	port := req.Header.Get("rport")
 	if /*pathToRequest == "" ||*/ port == "" {
 		_, err := io.WriteString(w, `
 		The request should be something like:

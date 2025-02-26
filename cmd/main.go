@@ -13,11 +13,11 @@ import (
 func main() {
 
 	exposePort := flag.String("exposePort", "8000", "port to expose")
+	flag.Parse()
 	var b strings.Builder
 	b.WriteString(":")
 	b.WriteString(*exposePort)
 	localAddr := b.String()
-	flag.Parse()
 
 	server := &http.Server{
 		Addr:              localAddr,

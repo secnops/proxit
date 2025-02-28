@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func Request(method, url_, body string, headers map[string]string) string {
+func Request(method, url_, body string, headers map[string]string) (string, error) {
 
 	//fmt.Println("method:", method)
 	//fmt.Println("url:", url)
@@ -42,6 +42,7 @@ func Request(method, url_, body string, headers map[string]string) string {
 
 		req, err = http.NewRequest("GET", url_, nil)
 		if err != nil {
+			return "", err
 			log.Fatal("ERROR -> ", "Couldn't initialize the request, check the parameters. Error: %+v", err)
 			log.Fatalf("ERROR -> Couldn't initialize the requester")
 		}
@@ -51,6 +52,7 @@ func Request(method, url_, body string, headers map[string]string) string {
 		send_body := []byte(body)
 		req, err = http.NewRequest(method, url_, bytes.NewBuffer(send_body))
 		if err != nil {
+			~return "", er~
 			log.Fatal("ERROR -> ", "Couldn't initialize the request, check the parameters. Error: %+v", err)
 		}
 	}
@@ -63,12 +65,14 @@ func Request(method, url_, body string, headers map[string]string) string {
 	resp, err := client.Do(req)
 
 	if err != nil {
+		return "", err
 		log.Fatal("ERROR -> ", "Couldn't send request. Error:%+v", err)
 	}
 	defer resp.Body.Close()
 	body_response, err := io.ReadAll(resp.Body)
 	//fmt.Println("Response -> ", string(body_response))
 	if err != nil {
+		return "", err
 		log.Fatal("ERROR -> ", "Couldn't parse response body. Error: %+v", err)
 
 	}
@@ -80,5 +84,5 @@ func Request(method, url_, body string, headers map[string]string) string {
 			return string(body_respvarse)
 		}
 	*/
-	return string(body_response)
+	return string(body_response), nil
 }

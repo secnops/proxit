@@ -42,8 +42,16 @@ func Proxy(w http.ResponseWriter, req *http.Request) {
 	url := schema + remoteAddr + ":" + port + pathToRequest
 
 	slog.Info("Request info", "Method", req.Method, "Url", url)
-	i := r.Request(req.Method, url, "", map[string]string{})
-	_, err := io.WriteString(w, i)
+	remoteResponse, err := r.Request(req.Method, url, "", map[string]string{})
+	if err != nil {
+		slog.Error("Error", "Error", err)
+		_, err := io.WriteString(w, "Error: "+err.Error())
+		if err != nil {
+			panic(err)
+		}
+		return
+	}
+	_, err = io.WriteString(w, remoteResponse)
 	if err != nil {
 		panic(err)
 	}

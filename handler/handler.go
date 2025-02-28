@@ -4,9 +4,14 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"slices"
 
 	r "github.com/secnops/proxit/requester"
 )
+
+var headMethods = []string{
+	"GET", "HEAD", "OPTIONS",
+}
 
 func Proxy(w http.ResponseWriter, req *http.Request) {
 	// we will proxy everything except the port, the remote address
@@ -42,7 +47,31 @@ func Proxy(w http.ResponseWriter, req *http.Request) {
 	url := schema + remoteAddr + ":" + port + pathToRequest
 
 	slog.Info("Request info", "Method", req.Method, "Url", url)
-	remoteResponse, err := r.Request(req.Method, url, "", map[string]string{})
+	var remoteResponse string
+	var err error
+	if !slices.Contains(headMethods, req.Method) {
+		body, e := req.GetBody()
+		if e != nil {
+			slog.Error("Error", "Error", e)
+			panic(e)
+		}
+		rBody := make([]byte, req.ContentLength)
+		body.Read(rBody)
+		defer body.Close()
+		remoteResponse, err = r.Request(req.Method, url, string(rBody), map[string]string{})
+		if err != nil {
+			slog.Error("Error", "Error", err)
+			_, err := io.WriteString(w, "Error: "+err.Error())
+			if err != nil {
+				panic(err)
+			}
+			return
+		}
+		io.WriteString(w, remoteResponse)
+		return
+	}
+	// if the request is a head method we will not send the body
+	remoteResponse, err = r.Request(req.Method, url, "", map[string]string{})
 	if err != nil {
 		slog.Error("Error", "Error", err)
 		_, err := io.WriteString(w, "Error: "+err.Error())

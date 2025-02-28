@@ -52,7 +52,7 @@ func Request(method, url_, body string, headers map[string]string) (string, erro
 		send_body := []byte(body)
 		req, err = http.NewRequest(method, url_, bytes.NewBuffer(send_body))
 		if err != nil {
-			~return "", er~
+			return "", err
 			log.Fatal("ERROR -> ", "Couldn't initialize the request, check the parameters. Error: %+v", err)
 		}
 	}
